@@ -1,0 +1,18 @@
+replicaCount: 1
+
+image:
+  repository: 820883240614.dkr.ecr.ap-southeast-1.amazonaws.com/edu_web_v2_beta
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: v1.0.0
+
+
+service:
+  type: ClusterIP
+  port: 31000
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80

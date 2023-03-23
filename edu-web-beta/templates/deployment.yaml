@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edu-web-beta
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: edu-web-beta
+  template:
+    metadata:
+      labels:
+        app: edu-web-beta
+    spec:
+      containers:
+      - name: edu-web-beta
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 80
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
