@@ -4,8 +4,13 @@ image:
   repository: 820883240614.dkr.ecr.ap-southeast-1.amazonaws.com/edu_web_v2_beta
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: v1.0.0
-
+  tag: "v1.0.0"
+nameOverride: ""
+fullnameOverride: ""
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
 
 service:
   type: ClusterIP

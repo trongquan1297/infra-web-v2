@@ -1,22 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: edu-web-beta
+  name: {{ include "edu-web-beta.fullname" . }}
+  labels:
+    {{- include "edu-web-beta.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: edu-web-beta
+      {{- include "edu-web-beta.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: edu-web-beta
+        {{- include "edu-web-beta.selectorLabels" . | nindent 8 }}
     spec:
+      serviceAccountName: {{ include "edu-web-beta.serviceAccountName" . }}
       containers:
-      - name: edu-web-beta
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        ports:
-        - containerPort: 80
-        resources:
-          {{- toYaml .Values.resources | nindent 12 }}
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 31000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
